@@ -1,38 +1,413 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coming Soon</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CV | Your Name</title>
+  <meta name="description" content="Personal CV and professional profile" />
   <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --shadow: 0 18px 45px rgba(17, 24, 39, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      height: 100vh;
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0edff 0, transparent 34%), var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 22px 80px;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    button, .file-label {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      padding: 9px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 13px;
+      box-shadow: 0 8px 20px rgba(17, 24, 39, 0.06);
+    }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.danger { color: #b91c1c; }
+    input[type="file"] { display: none; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
       align-items: center;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #222;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #1d4ed8;
+      font-weight: 750;
+      font-size: 13px;
+      margin-bottom: 16px;
     }
-    .box {
-      text-align: center;
-      padding: 40px;
-    }
+
     h1 {
-      font-size: 42px;
-      margin-bottom: 12px;
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.04;
+      letter-spacing: -0.045em;
     }
-    p {
-      font-size: 18px;
-      color: #666;
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    h3 { margin: 0 0 6px; font-size: 17px; }
+    p { margin: 0; }
+    .subtitle { margin-top: 14px; color: var(--muted); font-size: 18px; }
+    .summary { margin-top: 22px; font-size: 16px; }
+
+    .profile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .avatar {
+      width: 108px;
+      height: 108px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--accent), #111827);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 38px;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+    }
+
+    .contact {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.55fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .section { margin-bottom: 24px; }
+    .section:last-child { margin-bottom: 0; }
+
+    .item {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+    .item:first-of-type { border-top: 0; padding-top: 0; }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .tag {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    ul { margin: 8px 0 0; padding-left: 19px; }
+    li { margin: 4px 0; }
+
+    .edit-mode [contenteditable="true"] {
+      outline: 2px dashed rgba(37, 99, 235, 0.35);
+      outline-offset: 3px;
+      border-radius: 8px;
+      background: rgba(219, 234, 254, 0.25);
+    }
+
+    .hint {
+      display: none;
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #1e40af;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+    .edit-mode .hint { display: block; }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .toolbar { justify-content: flex-start; flex-wrap: wrap; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar, .hint { display: none !important; }
+      .page { padding: 0; }
+      .card { box-shadow: none; border-color: #ddd; break-inside: avoid; }
+      a { color: inherit; }
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Coming Soon</h1>
-    <p>홈페이지를 준비하고 있습니다.</p>
-  </div>
+  <main class="page" id="page">
+    <div class="toolbar">
+      <button class="primary" id="editToggle">편집 모드 켜기</button>
+      <button id="downloadJson">JSON 저장</button>
+      <label class="file-label" for="uploadJson">JSON 불러오기</label>
+      <input id="uploadJson" type="file" accept="application/json" />
+      <button id="printPage">PDF/인쇄</button>
+      <button class="danger" id="resetData">초기화</button>
+    </div>
+
+    <p class="hint">파란 점선 영역을 직접 클릭해 수정하세요. 수정 후 “JSON 저장”을 누르면 백업 파일을 받을 수 있습니다.</p>
+
+    <section class="hero">
+      <div class="card">
+        <div class="eyebrow" data-key="eyebrow" contenteditable="false">AI R&D Strategy · Policy · Technology Planning</div>
+        <h1 data-key="name" contenteditable="false">Your Name</h1>
+        <p class="subtitle" data-key="title" contenteditable="false">AI Research & Development Strategy Lead</p>
+        <p class="summary" data-key="summary" contenteditable="false">국가 AI R&D 전략, 파운데이션 모델, AI Safety, 에이전틱 AI 및 고효율 AI 인프라 기획을 중심으로 기술·정책·산업을 연결하는 일을 수행합니다.</p>
+      </div>
+
+      <aside class="card profile">
+        <div>
+          <div class="avatar" data-key="initials" contenteditable="false">YN</div>
+        </div>
+        <div class="contact">
+          <div data-key="email" contenteditable="false">email@example.com</div>
+          <div data-key="location" contenteditable="false">Seoul, Republic of Korea</div>
+          <div data-key="website" contenteditable="false">https://yourname.github.io</div>
+          <div data-key="linkedin" contenteditable="false">LinkedIn / Google Scholar / GitHub</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <aside class="card">
+        <div class="section">
+          <h2>Expertise</h2>
+          <div class="tags" data-key="expertise" contenteditable="false">
+            <span class="tag">Foundation Models</span>
+            <span class="tag">Agentic AI</span>
+            <span class="tag">AI Safety</span>
+            <span class="tag">Physical AI</span>
+            <span class="tag">AI Infrastructure</span>
+            <span class="tag">National R&D</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Selected Skills</h2>
+          <ul data-key="skills" contenteditable="false">
+            <li>AI R&D program design</li>
+            <li>Technology trend analysis</li>
+            <li>Benchmark and evaluation strategy</li>
+            <li>International collaboration planning</li>
+            <li>Policy and standards alignment</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Education</h2>
+          <div class="item" data-key="education" contenteditable="false">
+            <h3>Degree, University</h3>
+            <div class="meta">Year · Field</div>
+            <p>Brief description or thesis topic.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Languages</h2>
+          <ul data-key="languages" contenteditable="false">
+            <li>Korean · Native</li>
+            <li>English · Professional</li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="card">
+        <div class="section">
+          <h2>Professional Experience</h2>
+          <div class="item" data-key="experience1" contenteditable="false">
+            <h3>Current Position · Organization</h3>
+            <div class="meta">2024 – Present · Seoul</div>
+            <ul>
+              <li>Plan and coordinate national AI R&D programs.</li>
+              <li>Develop technology roadmaps for foundation models, AI agents, safety, and infrastructure.</li>
+              <li>Bridge research, industry, standards, and policy requirements.</li>
+            </ul>
+          </div>
+          <div class="item" data-key="experience2" contenteditable="false">
+            <h3>Previous Position · Organization</h3>
+            <div class="meta">Year – Year · Location</div>
+            <ul>
+              <li>Led AI research teams and strategic projects.</li>
+              <li>Designed applied AI systems and research commercialization pipelines.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Selected Projects</h2>
+          <div class="item" data-key="project1" contenteditable="false">
+            <h3>National Foundation Model Initiative</h3>
+            <div class="meta">Role · Year</div>
+            <p>Planned large-scale R&D agenda for sovereign and domain-specialized foundation models.</p>
+          </div>
+          <div class="item" data-key="project2" contenteditable="false">
+            <h3>AI Safety and Evaluation Framework</h3>
+            <div class="meta">Role · Year</div>
+            <p>Designed evaluation, governance, and safety alignment directions for advanced AI systems.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Publications / Talks / Standards</h2>
+          <div class="item" data-key="publications" contenteditable="false">
+            <ul>
+              <li>Keynote: AI Technology Trends and R&D Directions, Year.</li>
+              <li>Standardization activity: ISO/IEC JTC 1/SC 42, Year.</li>
+              <li>Publication or report title, Venue, Year.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <p class="footer">Last updated: <span data-key="updated" contenteditable="false">2026.05</span></p>
+  </main>
+
+  <script>
+    const page = document.getElementById('page');
+    const editToggle = document.getElementById('editToggle');
+    const editableNodes = [...document.querySelectorAll('[data-key]')];
+    let editing = false;
+
+    function setEditing(value) {
+      editing = value;
+      document.body.classList.toggle('edit-mode', editing);
+      editableNodes.forEach(node => node.setAttribute('contenteditable', editing ? 'true' : 'false'));
+      editToggle.textContent = editing ? '편집 모드 끄기' : '편집 모드 켜기';
+    }
+
+    function collectData() {
+      const data = {};
+      editableNodes.forEach(node => {
+        data[node.dataset.key] = node.innerHTML.trim();
+      });
+      return data;
+    }
+
+    function applyData(data) {
+      editableNodes.forEach(node => {
+        if (data[node.dataset.key] !== undefined) node.innerHTML = data[node.dataset.key];
+      });
+    }
+
+    function download(filename, text) {
+      const blob = new Blob([text], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    editToggle.addEventListener('click', () => setEditing(!editing));
+
+    document.getElementById('downloadJson').addEventListener('click', () => {
+      const data = collectData();
+      download('cv-data.json', JSON.stringify(data, null, 2));
+    });
+
+    document.getElementById('uploadJson').addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          applyData(JSON.parse(reader.result));
+        } catch (error) {
+          alert('JSON 파일을 읽을 수 없습니다.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById('printPage').addEventListener('click', () => window.print());
+
+    document.getElementById('resetData').addEventListener('click', () => {
+      if (confirm('현재 수정 내용을 새로고침으로 되돌리시겠습니까?')) location.reload();
+    });
+  </script>
 </body>
 </html>
